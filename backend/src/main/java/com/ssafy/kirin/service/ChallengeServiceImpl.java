@@ -237,6 +237,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             String commandExtractMusic = String.format("%s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             System.out.println(videoDir);
             System.out.println(videoTmp.getRoot());
             System.out.println(musicDir);
