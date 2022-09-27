@@ -52,7 +52,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Value("${property.app.upload-path}")
     private String challengeDir;
     private String program = "/program";
-    private String destination = "/var/lib/docker/volumes/kirin_vol/_data/";
+    private String destination = "/media/";
+//    "/var/lib/docker/volumes/kirin_vol/_data/"
 
     @Override
     public List<Challenge> listStarsByPopularity() {
@@ -229,15 +230,19 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video, MultipartFile image) {
         try {
             User user = userRepository.getReferenceById(userDTO.getId());
-            String ext = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
-            String videoDir = challengeDir+UUID.randomUUID()+ext;
+            String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
+            String videoDir = challengeDir+UUID.randomUUID()+videoExt;
             Path videoTmp = Paths.get(videoDir);
+
+            String imageExt = image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf("."));
+            String imageDir = challengeDir+UUID.randomUUID()+imageExt;
+            Path imageTmp = Paths.get(imageDir);
+            Files.copy(image.getInputStream(), imageTmp);
 
             Files.copy(video.getInputStream(), videoTmp);
             String musicDir = destination+UUID.randomUUID()+".mp3";
             String commandExtractMusic = String.format("%s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
-            Process p1 =Runtime.getRuntime().exec("sudo su");
-            p1.waitFor();
+
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
             System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -262,7 +267,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             CelebChallengeInfo celebChallengeInfo = CelebChallengeInfo.builder().info(starChallengeRequestDTO.info()).challenge(challenge).targetAmount(starChallengeRequestDTO.targetAmount())
                     .targetNum(starChallengeRequestDTO.targetNum()).music(musicDir).musicTitle(starChallengeRequestDTO.musicTitle()).length(musicLength)
-                    .endDate(starChallengeRequestDTO.endDate()).startDate(starChallengeRequestDTO.startDate())
+                    .endDate(starChallengeRequestDTO.endDate()).startDate(starChallengeRequestDTO.startDate()).stampImg(imageDir)
                     .donationOrganization(donationOrganizationRepository.getReferenceById(starChallengeRequestDTO.donationOrganizationId()))
                     .build();
 
