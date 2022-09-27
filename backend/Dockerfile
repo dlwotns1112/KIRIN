@@ -6,10 +6,8 @@
 #ENTRYPOINT ["java","-jar","/app.jar"]
 # open jdk java 17 버전의 환경을 구성
 FROM openjdk:17-jdk
-RUN apk add --update packagename=1.2.3-suffix
-RUN apt-get -y update
-RUN apt-get -y upgrade
-RUN apt-get install -y ffmpeg
+RUN apk update
+RUN apk add --upgrade ffmpeg
 # build 시점에 활용되는 변수선언문 (target 폴더의 jar파일을 바라볼 것)
 ARG JAR_FILE=build/libs/backend-0.0.1-SNAPSHOT.jar
 # 이를 카피하여 app.jar 로 복사
