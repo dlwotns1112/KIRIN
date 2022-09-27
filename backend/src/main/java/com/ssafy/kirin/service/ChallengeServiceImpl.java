@@ -240,17 +240,25 @@ public class ChallengeServiceImpl implements ChallengeService {
             Files.copy(video.getInputStream(), videoTmp);
             String musicDir = challengeDir+UUID.randomUUID()+".mp3";
             String commandExtractMusic = String.format("%sffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
+            System.out.println(commandExtractMusic);
+
 
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
             System.out.println("stored stamp image");
             System.out.println(musicDir);
             System.out.println("extracting music");
+            p = Runtime.getRuntime().exec("pwd");
+            BufferedReader brtmp = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            System.out.println("ffmpeg version will be : ");
+            while ((line = brtmp.readLine()) != null)
+                System.out.println(line);
+
             p = Runtime.getRuntime().exec(String.format("%sffmpeg -version",program ));
             p.waitFor();
             System.out.println("version read");
-            BufferedReader brtmp = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
+            brtmp = new BufferedReader(new InputStreamReader(p.getInputStream()));
             System.out.println("ffmpeg version will be : ");
             while ((line = brtmp.readLine()) != null)
                 System.out.println(line);
