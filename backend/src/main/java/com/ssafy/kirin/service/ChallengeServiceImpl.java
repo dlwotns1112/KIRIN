@@ -49,7 +49,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final DonationOrganizationRepository donationOrganizationRepository;
     @Value("${property.app.path}")
     private String challengeDir;
-    private String program = "/program";
+    private String program = "/usr/bin/";
     private String destination = "/media/";
 //    "/var/lib/docker/volumes/kirin_vol/_data/"
 
@@ -239,14 +239,14 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             Files.copy(video.getInputStream(), videoTmp);
             String musicDir = challengeDir+UUID.randomUUID()+".mp3";
-            String commandExtractMusic = String.format("/bin/sh -c %s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
+            String commandExtractMusic = String.format("%sffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
 
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
             System.out.println("stored stamp image");
             System.out.println(musicDir);
             System.out.println("extracting music");
-            p = Runtime.getRuntime().exec(String.format("%s/ffprobe -version",program ));
+            p = Runtime.getRuntime().exec(String.format("%sffmpeg -version",program ));
             p.waitFor();
             System.out.println("version read");
             BufferedReader brtmp = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -254,7 +254,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             System.out.println("ffmpeg version will be : ");
             while ((line = brtmp.readLine()) != null)
                 System.out.println(line);
-            p = Runtime.getRuntime().exec(String.format("%s/ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",program,musicDir));
+            p = Runtime.getRuntime().exec(String.format("%sffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",program,musicDir));
             p.waitFor();
             System.out.println("music extracted");
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -263,7 +263,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             System.out.println("music length : "+musicLength);
 
             String thumbDir = destination+UUID.randomUUID()+".gif";
-            String commandExtractThumbnail = String.format("/bin/sh -c %s/ffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",program, videoDir,thumbDir);
+            String commandExtractThumbnail = String.format("%sffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",program, videoDir,thumbDir);
             p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
 
