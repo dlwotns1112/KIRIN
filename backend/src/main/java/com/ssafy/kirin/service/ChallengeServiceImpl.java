@@ -248,7 +248,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             System.out.println("stored stamp image");
             System.out.println(musicDir);
             System.out.println("extracting music");
-            p = Runtime.getRuntime().exec("ls");
+            p = Runtime.getRuntime().exec("ls /media");
             BufferedReader brtmp = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             System.out.println("current directory has : ");
