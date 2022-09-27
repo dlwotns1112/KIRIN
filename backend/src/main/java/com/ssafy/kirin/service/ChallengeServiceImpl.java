@@ -47,7 +47,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final NotificationService notificationService;
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final DonationOrganizationRepository donationOrganizationRepository;
-    @Value("${property.app.upload}")
+    @Value("${property.app.path}")
     private String challengeDir;
     private String program = "/program";
     private String destination = "/media/";
