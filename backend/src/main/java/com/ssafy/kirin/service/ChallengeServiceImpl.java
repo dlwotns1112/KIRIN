@@ -49,7 +49,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final DonationOrganizationRepository donationOrganizationRepository;
     @Value("${property.app.path}")
     private String challengeDir;
-    private String program = "/usr/bin/";
+    private String program = "/usr/bin/ffmpeg";
     private String destination = "/media/";
 //    "/var/lib/docker/volumes/kirin_vol/_data/"
 
@@ -239,27 +239,19 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             Files.copy(video.getInputStream(), videoTmp);
             String musicDir = challengeDir+UUID.randomUUID()+".mp3";
-            String commandExtractMusic = String.format("%sffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
-            System.out.println(commandExtractMusic);
+            String commandExtractMusic = String.format("%s -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
 
 
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
-            System.out.println("stored stamp image");
-            System.out.println(musicDir);
-            System.out.println("extracting music");
             p = Runtime.getRuntime().exec("ls /usr/bin");
             BufferedReader brtmp = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            System.out.println("media directory has : ");
-            while ((line = brtmp.readLine()) != null)
-                System.out.println(line);
 
-            p = Runtime.getRuntime().exec(String.format("%sffmpeg -version",program ));
+            p = Runtime.getRuntime().exec(String.format("%s -version",program ));
             p.waitFor();
-            System.out.println("version read");
             brtmp = new BufferedReader(new InputStreamReader(p.getInputStream()));
             System.out.println("ffmpeg version will be : ");
+            String line;
             while ((line = brtmp.readLine()) != null)
                 System.out.println(line);
             p = Runtime.getRuntime().exec(String.format("%sffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",program,musicDir));
