@@ -256,7 +256,9 @@ public class ChallengeServiceImpl implements ChallengeService {
             p.waitFor();
             System.out.println("music extracted");
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            Integer musicLength = Double.valueOf(br.readLine()).intValue();
+            String aa = br.readLine();
+            System.out.println(aa);
+            Integer musicLength = Double.valueOf(aa).intValue();
 
             System.out.println("music length : "+musicLength);
 
