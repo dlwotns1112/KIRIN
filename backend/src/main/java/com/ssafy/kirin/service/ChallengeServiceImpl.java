@@ -52,6 +52,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Value("${property.app.upload-path}")
     private String challengeDir;
     private String program = "/program";
+    private String destination = "/var/lib/docker/volumes/kirin_vol/_data/";
 
     @Override
     public List<Challenge> listStarsByPopularity() {
@@ -233,13 +234,11 @@ public class ChallengeServiceImpl implements ChallengeService {
             Path videoTmp = Paths.get(videoDir);
 
             Files.copy(video.getInputStream(), videoTmp);
-            String musicDir = challengeDir+UUID.randomUUID()+".mp3";
+            String musicDir = destination+UUID.randomUUID()+".mp3";
             String commandExtractMusic = String.format("%s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
             System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            System.out.println(videoDir);
-            System.out.println(videoTmp.getRoot());
             System.out.println(musicDir);
 
             p = Runtime.getRuntime().exec(String.format("%s/ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",program,musicDir));
@@ -247,7 +246,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             Integer musicLength = Double.valueOf(br.readLine()).intValue();
 
-            String thumbDir = challengeDir+UUID.randomUUID()+".gif";
+            String thumbDir = destination+UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("%s/ffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",program, videoDir,thumbDir);
             p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
