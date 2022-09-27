@@ -7,7 +7,7 @@
 #open jdk java 17 버전의 환경을 구성
 FROM openjdk:17-jdk-alpine
 
-WORKDIR /root
+WORKDIR /
 
 RUN apk add ffmpeg
 # build 시점에 활용되는 변수선언문 (target 폴더의 jar파일을 바라볼 것)
