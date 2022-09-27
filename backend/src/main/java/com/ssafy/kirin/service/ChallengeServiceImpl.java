@@ -236,6 +236,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             Files.copy(video.getInputStream(), videoTmp);
             String musicDir = destination+UUID.randomUUID()+".mp3";
             String commandExtractMusic = String.format("%s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
+            Process p1 =Runtime.getRuntime().exec("sudo su");
+            p1.waitFor();
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
             System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
