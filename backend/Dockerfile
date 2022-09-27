@@ -6,9 +6,9 @@
 #ENTRYPOINT ["java","-jar","/app.jar"]
 # open jdk java 17 버전의 환경을 구성
 FROM openjdk:17-jdk-oraclelinux7
-RUN sudo yum install epel-release
-RUN sudo yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
-RUM sudo yum install ffmpeg ffmpeg-devel
+RUN yum install epel-release
+RUN yum localinstall --nogpgcheck https://download1.rpmfusion.org/free/el/rpmfusion-free-release-7.noarch.rpm \
+RUM yum install ffmpeg ffmpeg-devel
 # build 시점에 활용되는 변수선언문 (target 폴더의 jar파일을 바라볼 것)
 ARG JAR_FILE=build/libs/backend-0.0.1-SNAPSHOT.jar
 # 이를 카피하여 app.jar 로 복사
