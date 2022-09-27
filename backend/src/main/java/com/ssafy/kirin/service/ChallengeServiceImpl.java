@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
@@ -239,7 +240,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             p = Runtime.getRuntime().exec(String.format("%s/ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",program,musicDir));
             p.waitFor();
-            Integer musicLength = Integer.valueOf(String.valueOf(new InputStreamReader(p.getInputStream())));
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            Integer musicLength = Double.valueOf(br.readLine()).intValue();
 
             String thumbDir = challengeDir+UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("%s/ffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",program, videoDir,thumbDir);
