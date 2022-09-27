@@ -16,7 +16,6 @@ import com.ssafy.kirin.util.NotificationEnum;
 import com.ssafy.kirin.util.UserMapStruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.boot.archive.spi.InputStreamAccess;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,7 +47,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final NotificationService notificationService;
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final DonationOrganizationRepository donationOrganizationRepository;
-    @Value("${property.app.upload-path}")
+    @Value("${property.app.upload}")
     private String challengeDir;
     private String program = "/program";
     private String destination = "/media/";
@@ -240,7 +238,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             Files.copy(image.getInputStream(), imageTmp);
 
             Files.copy(video.getInputStream(), videoTmp);
-            String musicDir = destination+UUID.randomUUID()+".mp3";
+            String musicDir = challengeDir+UUID.randomUUID()+".mp3";
             String commandExtractMusic = String.format("%s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
 
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
@@ -253,10 +251,14 @@ public class ChallengeServiceImpl implements ChallengeService {
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             Integer musicLength = Double.valueOf(br.readLine()).intValue();
 
+            System.out.println("music length : "+musicLength);
+
             String thumbDir = destination+UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("%s/ffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",program, videoDir,thumbDir);
             p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
+
+            System.out.println("thumb dir : " + thumbDir);
 
             Challenge challenge = Challenge.builder().user(user).video(videoDir)
                     .isProceeding(true).reg(LocalDateTime.now()).isOriginal(true).thumbnail(thumbDir)
