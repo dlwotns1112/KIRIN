@@ -7,6 +7,7 @@
 
 # open jdk java 17 버전의 환경을 구성
 FROM openjdk:17-jdk
+RUN apk add --update yourPackageName
 RUN apt-get -y update
 RUN apt-get -y upgrade
 RUN apt-get install -y ffmpeg
