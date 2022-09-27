@@ -49,8 +49,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final DonationOrganizationRepository donationOrganizationRepository;
     @Value("${property.app.upload-path}")
-    private final String challengeDir;
-    private final String program = "/program";
+    private String challengeDir;
+    private String program = "/program";
 
     @Override
     public List<Challenge> listStarsByPopularity() {
