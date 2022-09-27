@@ -232,16 +232,16 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             Files.copy(video.getInputStream(), videoTmp);
             String musicDir = challengeDir+UUID.randomUUID()+".mp3";
-            String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoDir,musicDir);
+            String commandExtractMusic = String.format("%sffmpeg -i %s -q:a 0 -map a %s",challengeDir,videoDir,musicDir);
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
 
-            p = Runtime.getRuntime().exec(String.format("ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",musicDir));
+            p = Runtime.getRuntime().exec(String.format("%sffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",challengeDir,musicDir));
             p.waitFor();
             Integer musicLength = Integer.valueOf(String.valueOf(new InputStreamReader(p.getInputStream())));
 
             String thumbDir = challengeDir+UUID.randomUUID()+".gif";
-            String commandExtractThumbnail = String.format("ffmpeg -t 2 -i %s  -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s", videoDir,thumbDir);
+            String commandExtractThumbnail = String.format("%sffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",challengeDir, videoDir,thumbDir);
             p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
 
