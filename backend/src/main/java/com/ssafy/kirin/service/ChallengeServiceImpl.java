@@ -239,14 +239,14 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             Files.copy(video.getInputStream(), videoTmp);
             String musicDir = challengeDir+UUID.randomUUID()+".mp3";
-            String commandExtractMusic = String.format("%s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
+            String commandExtractMusic = String.format("/bin/sh -c %s/ffmpeg -i %s -q:a 0 -map a %s",program,videoDir,musicDir);
 
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
             System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             System.out.println(musicDir);
 
-            p = Runtime.getRuntime().exec(String.format("%s/ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",program,musicDir));
+            p = Runtime.getRuntime().exec(String.format("/bin/sh -c %s/ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",program,musicDir));
             p.waitFor();
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             Integer musicLength = Double.valueOf(br.readLine()).intValue();
@@ -254,7 +254,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             System.out.println("music length : "+musicLength);
 
             String thumbDir = destination+UUID.randomUUID()+".gif";
-            String commandExtractThumbnail = String.format("%s/ffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",program, videoDir,thumbDir);
+            String commandExtractThumbnail = String.format("/bin/sh -c %s/ffmpeg -t 2 -i %s -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s",program, videoDir,thumbDir);
             p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
 
