@@ -244,19 +244,15 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
-
-            String line;
-            p=Runtime.getRuntime().exec("ffprobe --version");
-            p.waitFor();
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((line = br.readLine()) != null)
-                System.out.println(line);
-
-            p = Runtime.getRuntime().exec(String.format("ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",musicDir));
-            p.waitFor();
             System.out.println("music extracted");
 
-            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            //음악길이
+            p = Runtime.getRuntime().exec(String.format("ffmpeg -i %s 2>&1 | grep -oE \"[0-9]{1}:[0-9]{2}:[0-9]{2}\"",musicDir));
+            p.waitFor();
+
+
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line = br.readLine()) != null)
                 System.out.println(line);
             Integer musicLength = Double.valueOf(line).intValue();
